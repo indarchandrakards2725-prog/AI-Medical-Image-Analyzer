@@ -7,3 +7,8 @@ python-multipart
 pytest
 httpx
 
+torch
+torchvision
+monai
+pillow
+numpy
