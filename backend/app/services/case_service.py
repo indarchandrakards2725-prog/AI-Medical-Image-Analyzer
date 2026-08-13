@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
 
 from backend.app.model.case_model import Case
-from backend.app.schemas.case import CaseCreate, CaseResponse
+from backend.app.schemas.case import CaseCreate
 
 
 def create_case(
     db: Session,
     case_data: CaseCreate,
-) -> CaseResponse:
+) -> Case:
     case = Case(
         patient_name=case_data.patient_name,
         patient_age=case_data.patient_age,
@@ -19,56 +19,36 @@ def create_case(
     db.commit()
     db.refresh(case)
 
-    return CaseResponse(
-        id=case.id,
-        patient_name=case.patient_name,
-        patient_age=case.patient_age,
-        description=case.description,
-        status=case.status,
-    )
+    return case
 
 
 def get_case(
     db: Session,
     case_id: int,
-) -> CaseResponse | None:
-    case = db.query(Case).filter(Case.id == case_id).first()
-
-    if case is None:
-        return None
-
-    return CaseResponse(
-        id=case.id,
-        patient_name=case.patient_name,
-        patient_age=case.patient_age,
-        description=case.description,
-        status=case.status,
+) -> Case | None:
+    return (
+        db.query(Case)
+        .filter(Case.id == case_id)
+        .first()
     )
 
 
 def get_all_cases(
     db: Session,
-) -> list[CaseResponse]:
-    cases = db.query(Case).all()
-
-    return [
-        CaseResponse(
-            id=case.id,
-            patient_name=case.patient_name,
-            patient_age=case.patient_age,
-            description=case.description,
-            status=case.status,
-        )
-        for case in cases
-    ]
+) -> list[Case]:
+    return db.query(Case).all()
 
 
 def update_case_status(
     db: Session,
     case_id: int,
     status: str,
-) -> CaseResponse | None:
-    case = db.query(Case).filter(Case.id == case_id).first()
+) -> Case | None:
+    case = (
+        db.query(Case)
+        .filter(Case.id == case_id)
+        .first()
+    )
 
     if case is None:
         return None
@@ -78,10 +58,4 @@ def update_case_status(
     db.commit()
     db.refresh(case)
 
-    return CaseResponse(
-        id=case.id,
-        patient_name=case.patient_name,
-        patient_age=case.patient_age,
-        description=case.description,
-        status=case.status,
-    )
+    return case

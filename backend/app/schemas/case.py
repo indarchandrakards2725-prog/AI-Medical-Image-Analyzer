@@ -1,15 +1,29 @@
-from typing import Literal
+from datetime import datetime
+from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class CaseCreate(BaseModel):
-    patient_name: str = Field(min_length=1, max_length=100)
-    patient_age: int = Field(ge=18, le=120)
-    description: str = Field(min_length=1, max_length=500)
+    patient_name: str = Field(
+        min_length=1,
+        max_length=100,
+    )
+
+    patient_age: int = Field(
+        ge=18,
+        le=120,
+    )
+
+    description: str = Field(
+        min_length=1,
+        max_length=500,
+    )
 
 
 class CaseResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     patient_name: str
     patient_age: int
@@ -28,3 +42,12 @@ class CaseStatusUpdate(BaseModel):
         "approved",
         "rejected",
     ]
+
+
+class AnalysisResultResponse(BaseModel):
+    id: int
+    case_id: int
+    status: str
+    message: str
+    result_data: dict[str, Any] | None = None
+    created_at: datetime

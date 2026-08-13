@@ -8,3 +8,19 @@ __pycache__/
 
 
 uploads/
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# X-ray dataset
+training/dataset/
+
+# Uploaded files
+uploads/
+
+# Environment variables
+.env

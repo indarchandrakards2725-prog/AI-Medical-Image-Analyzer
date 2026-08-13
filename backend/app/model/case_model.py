@@ -33,3 +33,13 @@ class Case(Base):
         nullable=False,
         default="created",
     )
+
+    image_filename: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+
+    image_path: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
