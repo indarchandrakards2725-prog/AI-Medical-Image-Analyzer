@@ -39,17 +39,29 @@ async def upload_xray_image(
             detail="Only image files are allowed",
         )
 
+    # Get safe original filename
+    original_filename = Path(image.filename or "xray_image").name
+
     # Create unique filename
-    filename = f"case_{case_id}_{image.filename}"
+    filename = f"case_{case_id}_{original_filename}"
+
     file_path = UPLOAD_DIR / filename
 
     # Save image
     contents = await image.read()
     file_path.write_bytes(contents)
 
+    # Save image information in database
+    case.image_filename = original_filename
+    case.image_path = str(file_path)
+    case.status = "uploaded"
+
+    db.commit()
+    db.refresh(case)
+
     return {
         "case_id": case_id,
-        "filename": image.filename,
+        "filename": original_filename,
         "saved_as": str(file_path),
         "status": "uploaded",
     }
