@@ -12,3 +12,4 @@ torchvision
 monai
 pillow
 numpy
+streamlit
